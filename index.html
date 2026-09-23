@@ -40,11 +40,15 @@
     --grid: rgba(148,163,184,0.12);
     --text: #e4e4ec;
     --text-dim: #9898a8;
-    --text-muted: #5c5c6e;
+    --text-muted: #9296a8;   /* was #5c5c6e, 2.32:1 on the dark surfaces */
     --accent: #10B981;
     --accent-2: #0EA5E9;
     --accent-amber: #F59E0B;
-    --accent-red: #EF4444;
+    --accent-red: #F87171;    /* was #EF4444, 4.04:1 */
+    --accent-red-fill: #B02020;  /* a fill that carries white ink; it does
+                                    not flip with the theme, because ink on a
+                                    dark card and a fill under white ink want
+                                    opposite ends of the same scale */
     --accent-purple: #A78BFA;
     --accent-pink: #EC4899;
     --accent-cyan: #22D3EE;
@@ -67,12 +71,17 @@
     --text: #0f172a;
     --text-dim: #475569;
     --text-muted: #64748b;
-    --accent: #059669;
-    --accent-2: #0284c7;
-    --accent-amber: #d97706;
-    --accent-red: #dc2626;
-    --accent-purple: #7c3aed;
-    --accent-pink: #db2777;
+    /* Second token block, declared after the first and therefore the one that
+       wins. These are the status inks used on a tint of themselves -- the ink
+       of every status pill and delta figure -- and measured on those tints
+       they ran 2.63 to 3.91:1. Darkened to clear AA; the first block above is
+       dead weight either way. */
+    --accent: #036B4E;
+    --accent-2: #075985;
+    --accent-amber: #8F4A06;
+    --accent-red: #B02020;
+    --accent-purple: #6D28D9;
+    --accent-pink: #A3175C;
     --accent-cyan: #0891b2;
     --header-bg: rgba(255, 255, 255, 0.92);
     --hero-grad: linear-gradient(135deg, #d1fae5 0%, #f8fafc 100%);
@@ -159,7 +168,7 @@ main { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
 .loading-spinner { display: inline-block; width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .error-msg { background: color-mix(in srgb, var(--accent-red) 12%, transparent); border: 1px solid color-mix(in srgb, var(--accent-red) 35%, transparent); color: var(--accent-red); padding: 1.25rem; border-radius: var(--radius); text-align: center; display: none; margin-bottom: 1.5rem; }
-.error-msg button { margin-top: 0.7rem; background: var(--accent-red); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-family: var(--font-heading); cursor: pointer; font-weight: 600; }
+.error-msg button { margin-top: 0.7rem; background: var(--accent-red-fill); color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-family: var(--font-heading); cursor: pointer; font-weight: 600; }
 
 .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(120%); background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 0.55rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; z-index: 1000; box-shadow: var(--shadow); transition: transform 0.25s ease; pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); }
@@ -178,7 +187,21 @@ main { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
     .charts-grid { grid-template-columns: 1fr; }
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
     .insights { grid-template-columns: 1fr; }
-    .nav-actions .btn-ghost span { display: none; }
+    /* `display: none` takes the label out of the accessibility tree as well
+       as off the screen, so below 600px this link and this button became
+       icon-only controls with no accessible name at all. Hide it visually and
+       keep it announced. */
+    .nav-actions .btn-ghost span,
+    .nav-actions .btn-icon span {
+        position: absolute;
+        width: 1px; height: 1px;
+        padding: 0; margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        white-space: nowrap;
+        border: 0;
+    }
 }
 
 @media print {
@@ -189,6 +212,13 @@ main { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
     .hero h1, .hero h1 span, .badge, .kpi-value, .insight strong, .section-title, .chart-card h3 { color: black !important; }
     .badge { background: white !important; border-color: #ccc !important; }
     .chart-wrap { height: 220px; }
+}
+
+/* A link inside a source line, distinguished from the sentence around it by
+   colour alone: 1.1:1 against its own text. */
+.source a, .src a, footer a, .footnote a, .meta a {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }
 </style>
 </head>
