@@ -1,5 +1,7 @@
 # India Climate Emissions
 
+Shared engineering standard: @.claude/engineering-standards.md. It applies to all work in this repository. This file adds what is specific to the project, and wins where the two disagree.
+
 Emissions by sector and subsector for India, drawn live from the Climate TRACE v6 API. Single page, no build step, deployed on Netlify.
 
 ## Commands
